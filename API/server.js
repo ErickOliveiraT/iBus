@@ -36,21 +36,6 @@ app.post('/users', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
-//Autentica um usuário
-app.post('/auth', (req, res) => {
-  const user = {
-    email: req.body.email,
-    password_hash: md5(req.body.password)
-  };
-
-  users.authenticate(user)
-    .then((response) => {
-      if (response.valid) return res.status(200).send(JSON.stringify(response));
-      res.status(400).send(JSON.stringify(response));
-    })
-    .catch((error) => { res.status(500).send(error) });
-});
-
 //Consulta informações de um Usuário
 app.get('/users/:email?', (req, res) => {
   const email = req.params.email;
@@ -84,7 +69,33 @@ app.put('/users/:email?', (req, res) => {
     .catch((error) => { res.status(500).send(error) });
 });
 
+//Altera informações de um Usuário
+app.delete('/users/:email?', (req, res) => {
+  const email = req.params.email;
+  if (!email) return res.status(400).send({error: 'Email não informado'});
 
+  users.deleteUser(email)
+    .then((response) => {
+      if (response.valid) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(JSON.stringify(response));
+    })
+    .catch((error) => { res.status(500).send(error) });
+});
+
+//Autentica um usuário
+app.post('/auth', (req, res) => {
+  const user = {
+    email: req.body.email,
+    password_hash: md5(req.body.password)
+  };
+
+  users.authenticate(user)
+    .then((response) => {
+      if (response.valid) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(JSON.stringify(response));
+    })
+    .catch((error) => { res.status(500).send(error) });
+});
 
 let port = process.env.PORT || '4000';
 app.listen(port);

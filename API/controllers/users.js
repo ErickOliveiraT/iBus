@@ -88,4 +88,21 @@ function alterUser(email, user) {
     });
 }
 
-module.exports = { storeUser, authenticate, getUser, alterUser }
+function deleteUser(email) {
+    return new Promise(async (resolve) => {
+        let con = await database.getConnection();
+
+        con.connect(function (err) {
+            if (err) resolve({ valid: false, error: err });
+
+            var sql = `DELETE FROM users WHERE email='${email}'`;
+
+            con.query(sql, async function (err, result) {
+                if (err) resolve({ deleted: false, error: err });
+                resolve({deleted: true, result: result});
+            });
+        });
+    });
+}
+
+module.exports = { storeUser, authenticate, getUser, alterUser, deleteUser }
