@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
 });
 
 //Adiciona um novo usuário
-app.post('/adduser', (req, res) => {
+app.post('/users', (req, res) => {
   const user = {
     name: req.body.name,
     cpf: req.body.cpf,
