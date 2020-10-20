@@ -6,7 +6,8 @@ require('dotenv').config();
 //Controllers
 const users = require('./controllers/users');
 const lines = require('./controllers/lines');
-const stops = require('./controllers/stops')
+const stops = require('./controllers/stops');
+const routes = require('./controllers/routes');
 
 //Express
 const app = express();
@@ -99,6 +100,7 @@ app.post('/auth', (req, res) => {
     .catch((error) => { res.status(500).send(error) });
 });
 
+//Adiciona uma linhas
 app.post('/lines', (req, res) => {
   const line = {
     line: req.body.line,
@@ -114,6 +116,7 @@ app.post('/lines', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
+//Adiciona uma parada
 app.post('/stops', (req, res) => {
   const stop = {
     stop: req.body.stop,
@@ -123,6 +126,22 @@ app.post('/stops', (req, res) => {
   }
 
   stops.storeStop(stop)
+    .then((response) => {
+      if (response.stored) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
+});
+
+//Adiciona uma rota
+app.post('/routes', (req, res) => {
+  const route = {
+    line: req.body.line,
+    route: req.body.route,
+    service: req.body.service
+  }
+
+  stops.storeRoute(route)
     .then((response) => {
       if (response.stored) return res.status(200).send(JSON.stringify(response));
       res.status(400).send(response);
