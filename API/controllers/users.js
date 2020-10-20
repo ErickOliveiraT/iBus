@@ -8,9 +8,9 @@ function storeUser(user) {
         con.connect(function (err) {
             if (err) reject({ stored: false, error: err });
 
-            let sql = 'INSERT INTO users(name, cpf, email, birth_date, password, is_admin, balance) VALUES('
+            let sql = 'INSERT INTO users(name, cpf, email, birth_date, password, type, balance) VALUES('
                 + `'${user.name}', '${user.cpf}', '${user.email}', '${user.birth_date}', '${user.password}',`
-                + `${user.is_admin}, ${user.balance});`;
+                + `'${user.type}', ${user.balance});`;
 
             con.query(sql, function (err, result) {
                 if (err) {
@@ -49,4 +49,43 @@ function authenticate(user) {
     });
 }
 
-module.exports = { storeUser, authenticate }
+function getUser(email) {
+    return new Promise(async (resolve) => {
+        let con = await database.getConnection();
+
+        con.connect(function (err) {
+            if (err) resolve({ valid: false, error: err });
+
+            var sql = `SELECT * FROM users WHERE email = '${email}'`;
+
+            con.query(sql, async function (err, result) {
+                if (err) resolve({ valid: false, error: err });
+
+                if (result[0] == undefined || result[0] === undefined) resolve({ valid: false, error: "Usuário não existe" });
+                else {
+                    resolve(result[0]);
+                }
+            });
+        });
+    });
+}
+
+function alterUser(email, user) {
+    return new Promise(async (resolve) => {
+        let con = await database.getConnection();
+
+        con.connect(function (err) {
+            if (err) resolve({ valid: false, error: err });
+
+            var sql = `UPDATE users SET name='${user.name}', cpf='${user.cpf}', email='${user.email}',`
+                + `birth_date='${user.birth_date}', type='${user.type}' WHERE email = '${email}'`
+
+            con.query(sql, async function (err, result) {
+                if (err) resolve({ changed: false, error: err });
+                resolve({changed: true, result: result});
+            });
+        });
+    });
+}
+
+module.exports = { storeUser, authenticate, getUser, alterUser }
