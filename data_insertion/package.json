@@ -1,0 +1,15 @@
+{
+  "name": "data_insertion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "insert_lines.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "csv-wp": "^1.0.3"
+  }
+}

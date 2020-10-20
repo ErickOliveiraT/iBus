@@ -5,6 +5,7 @@ require('dotenv').config();
 
 //Controllers
 const users = require('./controllers/users');
+const lines = require('./controllers/lines');
 
 //Express
 const app = express();
@@ -95,6 +96,23 @@ app.post('/auth', (req, res) => {
       res.status(400).send(JSON.stringify(response));
     })
     .catch((error) => { res.status(500).send(error) });
+});
+
+app.post('/lines', (req, res) => {
+  const line = {
+    line: req.body.line,
+    agency: req.body.agency,
+    name: req.body.name
+  }
+
+  console.log(line);
+
+  lines.storeLine(line)
+    .then((response) => {
+      if (response.stored) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
 });
 
 let port = process.env.PORT || '4000';

@@ -40,9 +40,8 @@ function authenticate(user) {
                     if (result[0].password === user.password_hash) { //Senha certa
                         const tk = token.getJWT(user.email);
                         resolve({ valid: true, name: result[0].name, token: tk });
-                    } else { //Senha errada
-                        resolve({ valid: false, error: "Senha incorreta" })
                     }
+                    else resolve({ valid: false, error: "Senha incorreta" });
                 }
             });
         });
@@ -60,11 +59,8 @@ function getUser(email) {
 
             con.query(sql, async function (err, result) {
                 if (err) resolve({ valid: false, error: err });
-
                 if (result[0] == undefined || result[0] === undefined) resolve({ valid: false, error: "Usuário não existe" });
-                else {
-                    resolve(result[0]);
-                }
+                else resolve(result[0]);
             });
         });
     });
