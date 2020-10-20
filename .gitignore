@@ -1,3 +1,5 @@
-API/node_modules
+*/node_modules
 */.env
+*/credentials.txt
+*/credentials.js
 credentials.txt
