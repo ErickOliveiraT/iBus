@@ -36,7 +36,20 @@ app.post('/adduser', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
+//Autentica um usuário
+app.post('/auth', (req, res) => {
+  const user = {
+    email: req.body.email,
+    password_hash: md5(req.body.password)
+  };
 
+  users.authenticate(user)
+    .then((response) => {
+      if (response.valid) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(JSON.stringify(response));
+    })
+    .catch((error) => { res.status(500).send(error) });
+});
 
 
 
