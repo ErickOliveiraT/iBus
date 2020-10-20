@@ -6,6 +6,7 @@ require('dotenv').config();
 //Controllers
 const users = require('./controllers/users');
 const lines = require('./controllers/lines');
+const stops = require('./controllers/stops')
 
 //Express
 const app = express();
@@ -105,9 +106,23 @@ app.post('/lines', (req, res) => {
     name: req.body.name
   }
 
-  console.log(line);
-
   lines.storeLine(line)
+    .then((response) => {
+      if (response.stored) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
+});
+
+app.post('/stops', (req, res) => {
+  const stop = {
+    stop: req.body.stop,
+    address: req.body.address,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude
+  }
+
+  stops.storeStop(stop)
     .then((response) => {
       if (response.stored) return res.status(200).send(JSON.stringify(response));
       res.status(400).send(response);
