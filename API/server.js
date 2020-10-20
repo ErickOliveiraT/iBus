@@ -150,37 +150,6 @@ app.post('/routes', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
-const csvwp = require('csv-wp');
-const options = {
-  encoding: 'UTF-8',
-  delimiter: ';'
-}
-
-async function run() {
-  let stops = csvwp.getLines('../data_insertion/data/stop_sequence_csv.csv', options);
-
-  for (let i = 1; i < stops.length-1; i++) {
-    console.log(`Adicionando ${i+1} de ${stops.length-1}`);
-    let route = stops[i].split(';')[0];
-    let arrival = stops[i].split(';')[1];
-    let departure = stops[i].split(';')[2];
-    let stop = stops[i].split(';')[3];
-    let sequence = stops[i].split(';')[4];
-    let info = {route,arrival,departure,stop,sequence};
-    console.log(info);
-    try {
-      await stopSequence.storeStopSequence(info);
-    } catch (e) {
-      console.log(e);
-      break;
-    } 
-  }
-
-  console.log('Total: ', stops.length-1);
-}
-
-run();
-
 let port = process.env.PORT || '4000';
 app.listen(port);
 console.log('Server running on port ', port);
