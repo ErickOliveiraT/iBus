@@ -60,7 +60,10 @@ function getUser(email) {
             con.query(sql, async function (err, result) {
                 if (err) resolve({ valid: false, error: err });
                 if (result[0] == undefined || result[0] === undefined) resolve({ valid: false, error: "Usuário não existe" });
-                else resolve(result[0]);
+                else {
+                    delete result[0].password;
+                    resolve({valid: true, data: result[0]});
+                }
             });
         });
     });
@@ -89,7 +92,7 @@ function deleteUser(email) {
         let con = await database.getConnection();
 
         con.connect(function (err) {
-            if (err) resolve({ valid: false, error: err });
+            if (err) resolve({ deleted: false, error: err });
 
             var sql = `DELETE FROM users WHERE email='${email}'`;
 

@@ -47,7 +47,7 @@ app.get('/users/:email?', (req, res) => {
 
   users.getUser(email)
     .then((response) => {
-      if (response.valid) return res.status(200).send(JSON.stringify(response));
+      if (response.valid) return res.status(200).send(JSON.stringify(response.data));
       res.status(400).send(JSON.stringify(response));
     })
     .catch((error) => { res.status(500).send(error) });
@@ -67,7 +67,7 @@ app.put('/users/:email?', (req, res) => {
 
   users.alterUser(email, user)
     .then((response) => {
-      if (response.valid) return res.status(200).send(JSON.stringify(response));
+      if (response.changed) return res.status(200).send(JSON.stringify(response));
       res.status(400).send(JSON.stringify(response));
     })
     .catch((error) => { res.status(500).send(error) });
@@ -80,7 +80,7 @@ app.delete('/users/:email?', (req, res) => {
 
   users.deleteUser(email)
     .then((response) => {
-      if (response.valid) return res.status(200).send(JSON.stringify(response));
+      if (response.deleted) return res.status(200).send(JSON.stringify(response));
       res.status(400).send(JSON.stringify(response));
     })
     .catch((error) => { res.status(500).send(error) });
