@@ -101,7 +101,7 @@ app.post('/auth', (req, res) => {
     .catch((error) => { res.status(500).send(error) });
 });
 
-//Adiciona uma linhas
+//Adiciona uma linha
 app.post('/lines', (req, res) => {
   const line = {
     line: req.body.line,
@@ -117,7 +117,7 @@ app.post('/lines', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
-//Adiciona uma parada
+//Adiciona um ponto de parada
 app.post('/stops', (req, res) => {
   const stop = {
     stop: req.body.stop,
@@ -132,6 +132,28 @@ app.post('/stops', (req, res) => {
       res.status(400).send(response);
     })
     .catch((error) => { res.status(400).send(error) });
+});
+
+//Consulta pontos de parada
+app.get('/stops/:id?', (req, res) => {
+  const stop_id = req.params.id;
+
+  if (stop_id) {
+    stops.getStop(stop_id)
+    .then((response) => {
+      if (!response.error) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
+  }
+  else if (!stop_id || stop_id == '') {
+    stops.getStops(stop_id)
+    .then((response) => {
+      if (!response.error) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
+  }
 });
 
 //Adiciona uma rota
