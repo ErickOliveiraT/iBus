@@ -8,6 +8,7 @@ const users = require('./controllers/users');
 const lines = require('./controllers/lines');
 const stops = require('./controllers/stops');
 const routes = require('./controllers/routes');
+const vouchers = require('./controllers/vouchers');
 const stopSequence = require('./controllers/stop_sequence');
 
 //Express
@@ -140,19 +141,19 @@ app.get('/stops/:id?', (req, res) => {
 
   if (stop_id) {
     stops.getStop(stop_id)
-    .then((response) => {
-      if (!response.error) return res.status(200).send(JSON.stringify(response));
-      res.status(400).send(response);
-    })
-    .catch((error) => { res.status(400).send(error) });
+      .then((response) => {
+        if (!response.error) return res.status(200).send(JSON.stringify(response));
+        res.status(400).send(response);
+      })
+      .catch((error) => { res.status(400).send(error) });
   }
   else if (!stop_id || stop_id == '') {
     stops.getStops(stop_id)
-    .then((response) => {
-      if (!response.error) return res.status(200).send(JSON.stringify(response));
-      res.status(400).send(response);
-    })
-    .catch((error) => { res.status(400).send(error) });
+      .then((response) => {
+        if (!response.error) return res.status(200).send(JSON.stringify(response));
+        res.status(400).send(response);
+      })
+      .catch((error) => { res.status(400).send(error) });
   }
 });
 
@@ -164,9 +165,23 @@ app.post('/routes', (req, res) => {
     service: req.body.service
   }
 
-  stops.storeRoute(route)
+  routes.storeRoute(route)
     .then((response) => {
       if (response.stored) return res.status(200).send(JSON.stringify(response));
+      res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
+});
+
+//Gera um voucher de recarga
+app.get('/voucher/:value?', (req, res) => {
+  if (!req.params.value) return res.status(400).send({ error: 'Valor não informado ou mal formatado' });
+  const value = Number(req.params.value.replace(',', '.'));
+  if (value == 0) return res.status(400).send({ error: 'O valor do voucher não por ser zero' });
+
+  vouchers.generateVoucher(value)
+    .then((response) => {
+      if (!response.error) return res.status(200).send(JSON.stringify(response));
       res.status(400).send(response);
     })
     .catch((error) => { res.status(400).send(error) });
