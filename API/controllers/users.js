@@ -87,6 +87,23 @@ function alterUser(email, user) {
     });
 }
 
+function updateBalance(email, balance) {
+    return new Promise(async (resolve) => {
+        let con = await database.getConnection();
+
+        con.connect(function (err) {
+            if (err) resolve({ valid: false, error: err });
+
+            var sql = `UPDATE users SET balance=${balance} WHERE email='${email}'`
+
+            con.query(sql, async function (err, result) {
+                if (err) resolve({ updated: false, error: err });
+                resolve({updated: true, result: result});
+            });
+        });
+    });
+}
+
 function deleteUser(email) {
     return new Promise(async (resolve) => {
         let con = await database.getConnection();
@@ -104,4 +121,4 @@ function deleteUser(email) {
     });
 }
 
-module.exports = { storeUser, authenticate, getUser, alterUser, deleteUser }
+module.exports = { storeUser, authenticate, getUser, alterUser, deleteUser, updateBalance }

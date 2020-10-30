@@ -187,6 +187,28 @@ app.get('/voucher/:value?', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
+//Utiliza um voucher de regarga
+app.get('/voucher/redeem/:voucher?/:email?', (req, res) => {
+  const voucher = req.params.voucher;
+  const email = req.params.email;
+  if (!voucher) return res.status(400).send({ error: 'Voucher não informado' });
+  if (!email) return res.status(400).send({ error: 'Email não informado' });
+
+  vouchers.redeemVoucher(voucher, email)
+    .then((response) => {
+      if (response.redeemed) {
+        users.updateBalance(email, response.new_balance)
+        .then((response) => {
+          if (response.updated) return res.sendStatus(200);
+          res.status(400).send(JSON.stringify(response));
+        })
+        .catch((error) => { res.status(500).send(error) });
+      }
+      else return res.status(400).send(response);
+    })
+    .catch((error) => { res.status(400).send(error) });
+});
+
 let port = process.env.PORT || '4000';
 app.listen(port);
 console.log('Server running on port ', port);
