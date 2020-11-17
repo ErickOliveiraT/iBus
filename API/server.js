@@ -209,6 +209,17 @@ app.get('/voucher/redeem/:voucher?/:email?', (req, res) => {
     .catch((error) => { res.status(400).send(error) });
 });
 
+//Consultar linhas
+app.get('/lines/:stop_id?', (req, res) => {
+  const stop_id = req.params.stop_id;
+  
+  stops.getLinesFromStop(stop_id)
+  .then((response) => {
+    return res.status(200).send(JSON.stringify(response));
+  })
+  .catch((error) => { res.status(500).send(error) });
+});
+
 let port = process.env.PORT || '4000';
 app.listen(port);
 console.log('Server running on port ', port);

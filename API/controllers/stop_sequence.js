@@ -21,4 +21,29 @@ function storeStopSequence(info) {
     });
 }
 
-module.exports = {storeStopSequence}
+function getRoutesFromStop(stop) {
+    return new Promise(async (resolve, reject) => {
+        let con = await database.getConnection();
+
+        con.connect(function (err) {
+            if (err) reject({ error: err });
+
+            sql = 'SELECT route from stop_sequence WHERE stop='
+                + `'${stop}';`;
+
+            con.query(sql, function (err, result) {
+                if (err) {
+                    let error = err;
+                    return reject({ error: error });
+                }
+                let routes = new Array();
+                result.forEach(data => {
+                    routes.push(data.route);
+                });
+                resolve(routes);
+            });
+        });
+    });
+}
+
+module.exports = {storeStopSequence, getRoutesFromStop}
