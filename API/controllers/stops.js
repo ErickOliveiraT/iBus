@@ -80,7 +80,6 @@ async function getLinesFromStop(stop) {
             for (let i = 0; i < lines_id.length; i++) {
                 let line_data = await lines.getLine(lines_id[i]);
                 if (line_data) lines_info.push(line_data);
-
             }
 
             return resolve(lines_info);

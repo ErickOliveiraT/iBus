@@ -10,6 +10,9 @@ const stops = require('./controllers/stops');
 const routes = require('./controllers/routes');
 const vouchers = require('./controllers/vouchers');
 const stopSequence = require('./controllers/stop_sequence');
+const transactions = require('./controllers/transactions');
+const e = require('express');
+const purchases = require('./controllers/purchases');
 
 //Express
 const app = express();
@@ -216,6 +219,17 @@ app.get('/lines/:stop_id?', (req, res) => {
   stops.getLinesFromStop(stop_id)
   .then((response) => {
     return res.status(200).send(JSON.stringify(response));
+  })
+  .catch((error) => { res.status(500).send(error) });
+});
+
+//Comprar passagem
+app.get('/purchase/:email?', (req, res) => {
+  const email = req.params.email;
+  
+  purchases.buyTicket(email)
+  .then((response) => {
+    return res.sendStatus(200);
   })
   .catch((error) => { res.status(500).send(error) });
 });

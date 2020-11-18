@@ -1,4 +1,5 @@
 const database = require('./database');
+const transactions = require('./transactions');
 const users = require('./users');
 const nanoID = require('nano-id');
 
@@ -56,6 +57,12 @@ async function redeemVoucher(voucher, email) {
         if (!voucher_data || voucher_data.error) return reject({redeemed: false, error: 'Voucher não encontrado'});
         if (voucher_data.redeemed == 1) return reject({redeemed: false, error: 'Esse voucher já foi resgatado'});
         const new_balance = user.data.balance + voucher_data.value;
+
+        const transaction = {
+            email: email,
+            value: voucher_data.value,
+            type: 'recharge'
+        }
         
         let con = await database.getConnection();
 
@@ -69,7 +76,14 @@ async function redeemVoucher(voucher, email) {
                     let error = err;
                     return reject({ error: error });
                 }
-                resolve({redeemed: true, new_balance: new_balance});
+                transactions.storeTransaction(transaction)
+                .then(() => {
+                    resolve({redeemed: true, new_balance: new_balance});
+                })
+                .catch((e) => {
+                    resolve({redeemed: false, error: e});
+                })
+                
             });
         });
     });
