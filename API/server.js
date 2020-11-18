@@ -228,8 +228,9 @@ app.get('/purchase/:email?', (req, res) => {
   const email = req.params.email;
   
   purchases.buyTicket(email)
-  .then(() => {
-    return res.sendStatus(200);
+  .then((response) => {
+    if (response.error) res.status(500).send(JSON.stringify(response.error));
+    else return res.sendStatus(200);
   })
   .catch((error) => { res.status(500).send(error) });
 });

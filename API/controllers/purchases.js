@@ -8,6 +8,7 @@ function buyTicket(email) {
             const user = await users.getUser(email);
             if (!user.valid) reject({ done: false, stored: false, error: 'Usuário não encontrado'});
             const new_balance = user.data.balance - ticket_price;
+            if (new_balance < 0) reject({ done: false, stored: false, error: 'Não há saldo suficiente'});
             users.updateBalance(email, new_balance);
         } catch (e) {
             reject({ done: false, stored: false, error: e }); 
