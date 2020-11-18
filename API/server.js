@@ -228,8 +228,20 @@ app.get('/purchase/:email?', (req, res) => {
   const email = req.params.email;
   
   purchases.buyTicket(email)
-  .then((response) => {
+  .then(() => {
     return res.sendStatus(200);
+  })
+  .catch((error) => { res.status(500).send(error) });
+});
+
+//Consultar transações
+app.get('/transactions/:email?', (req, res) => {
+  const email = req.params.email;
+  
+  transactions.getTransactions(email)
+  .then((response) => {
+    if (response.valid) return res.status(200).send(JSON.stringify(response.result));
+    else return res.status(500).send(JSON.stringify(response.error));
   })
   .catch((error) => { res.status(500).send(error) });
 });

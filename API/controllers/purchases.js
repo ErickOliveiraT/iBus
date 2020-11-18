@@ -1,7 +1,5 @@
-const database = require('./database');
 const users = require('./users');
 const transactions = require('./transactions');
-const { response } = require('express');
 
 function buyTicket(email) {
     return new Promise(async (resolve, reject) => {

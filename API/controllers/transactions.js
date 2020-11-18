@@ -23,4 +23,24 @@ function storeTransaction(transaction) {
     });
 }
 
-module.exports = {storeTransaction}
+function getTransactions(email) {
+    return new Promise(async (resolve, reject) => {
+        let con = await database.getConnection();
+
+        con.connect(function (err) {
+            if (err) reject({ valid: false, error: err });
+
+            let sql = 'SELECT * from transactions where user_email='
+                + `'${email}';`;
+
+            con.query(sql, function (err, result) {
+                if (err) {
+                    return reject({ valid: false, error: err });
+                }
+                resolve({ valid: true, result: result });
+            });
+        });
+    });
+}
+
+module.exports = {storeTransaction, getTransactions}
