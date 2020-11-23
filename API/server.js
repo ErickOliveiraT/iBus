@@ -191,11 +191,11 @@ app.get('/voucher/:value?', (req, res) => {
 });
 
 //Utiliza um voucher de regarga
-app.get('/voucher/redeem/:voucher?/:email?', (req, res) => {
-  const voucher = req.params.voucher;
-  const email = req.params.email;
+app.post('/voucher/redeem', (req, res) => {
+  const voucher = req.body.voucher;
+  const email = req.body.user;
   if (!voucher) return res.status(400).send({ error: 'Voucher não informado' });
-  if (!email) return res.status(400).send({ error: 'Email não informado' });
+  if (!email) return res.status(400).send({ error: 'Usuário não informado' });
 
   vouchers.redeemVoucher(voucher, email)
     .then((response) => {
