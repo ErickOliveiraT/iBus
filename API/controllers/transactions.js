@@ -11,6 +11,10 @@ function storeTransaction(transaction) {
 
             let sql = 'INSERT INTO transactions (user_email, done_at, value, type) VALUES('
                 + `'${transaction.email}', '${datetime}', ${transaction.value}, '${transaction.type}')`;
+            if (transaction.desc) {
+                sql = 'INSERT INTO transactions (user_email, done_at, value, type, description) VALUES('
+                + `'${transaction.email}', '${datetime}', ${transaction.value}, '${transaction.type}', '${transaction.desc}')`;
+            }
 
             con.query(sql, function (err, result) {
                 if (err) {

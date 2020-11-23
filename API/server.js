@@ -224,10 +224,12 @@ app.get('/lines/:stop_id?', (req, res) => {
 });
 
 //Comprar passagem
-app.get('/purchase/:email?', (req, res) => {
-  const email = req.params.email;
+app.post('/purchase', (req, res) => {
+  const email = req.body.user;
+  const desc = req.body.description || null;
+  if (!email) return res.status(400).send(JSON.stringify({error: 'Usuário não informado'}));
   
-  purchases.buyTicket(email)
+  purchases.buyTicket(email, desc)
   .then((response) => {
     if (response.error) res.status(500).send(JSON.stringify(response.error));
     else return res.sendStatus(200);

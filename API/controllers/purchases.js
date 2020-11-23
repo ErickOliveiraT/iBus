@@ -1,7 +1,7 @@
 const users = require('./users');
 const transactions = require('./transactions');
 
-function buyTicket(email) {
+function buyTicket(email, desc) {
     return new Promise(async (resolve, reject) => {
         const ticket_price = 4;
         try {
@@ -17,7 +17,8 @@ function buyTicket(email) {
         const transaction = {
             email: email,
             value: ticket_price,
-            type: 'purchase'
+            type: 'purchase',
+            desc: desc
         }
         transactions.storeTransaction(transaction)
         .then(() => {
