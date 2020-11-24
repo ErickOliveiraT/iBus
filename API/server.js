@@ -200,9 +200,9 @@ app.post('/voucher/redeem', (req, res) => {
   vouchers.redeemVoucher(voucher, email)
     .then((response) => {
       if (response.redeemed) {
-        users.updateBalance(email, response.new_balance)
+        users.updateBalance(email, response.new_balance, response.voucher_value)
         .then((response) => {
-          if (response.updated) return res.sendStatus(200);
+          if (response.updated) return res.status(200).send(JSON.stringify(response));
           res.status(400).send(JSON.stringify(response));
         })
         .catch((error) => { res.status(500).send(error) });

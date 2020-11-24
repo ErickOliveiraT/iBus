@@ -88,7 +88,7 @@ function alterUser(email, user) {
     });
 }
 
-function updateBalance(email, balance) {
+function updateBalance(email, balance, voucher_value) {
     return new Promise(async (resolve) => {
         let con = await database.getConnection();
 
@@ -99,7 +99,8 @@ function updateBalance(email, balance) {
 
             con.query(sql, async function (err, result) {
                 if (err) resolve({ updated: false, error: err });
-                resolve({updated: true, result: result});
+                if (voucher_value) resolve({updated: true, new_balance: balance, voucher_value: voucher_value});
+                else resolve({updated: true});
             });
         });
     });

@@ -78,7 +78,7 @@ async function redeemVoucher(voucher, email) {
                 }
                 transactions.storeTransaction(transaction)
                 .then(() => {
-                    resolve({redeemed: true, new_balance: new_balance});
+                    resolve({redeemed: true, new_balance: new_balance, voucher_value: voucher_data.value});
                 })
                 .catch((e) => {
                     resolve({redeemed: false, error: e});
