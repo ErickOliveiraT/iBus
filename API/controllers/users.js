@@ -30,7 +30,7 @@ function authenticate(user) {
         con.connect(function (err) {
             if (err) resolve({ valid: false, error: err });
 
-            var sql = `SELECT password,name FROM users WHERE email = '${user.email}'`
+            var sql = `SELECT * FROM users WHERE email = '${user.email}'`
 
             con.query(sql, async function (err, result) {
                 if (err) resolve({ valid: false, error: err });
@@ -39,7 +39,8 @@ function authenticate(user) {
                 else {
                     if (result[0].password === user.password_hash) { //Senha certa
                         const tk = token.getJWT(user.email);
-                        resolve({ valid: true, name: result[0].name, token: tk });
+                        resolve({ valid: true, name: result[0].name, token: tk, name: result[0].name, cpf: result[0].cpf, birth_date: result[0].birth_date,
+                                email: result[0].email, type: result[0].type, balance: result[0].balance });
                     }
                     else resolve({ valid: false, error: "Senha incorreta" });
                 }
