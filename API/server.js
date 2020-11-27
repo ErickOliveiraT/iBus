@@ -232,7 +232,7 @@ app.post('/purchase', (req, res) => {
   purchases.buyTicket(email, desc)
   .then((response) => {
     if (response.error) res.status(500).send(JSON.stringify(response.error));
-    else return res.sendStatus(200);
+    else return res.status(200).send(JSON.stringify(response));
   })
   .catch((error) => { res.status(500).send(error) });
 });
